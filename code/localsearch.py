@@ -13,7 +13,7 @@ import time
 class TSPloader():
     '''
     Class used to load a .tsp file into a numpy array containing 
-    a numpy array (x,y), where x and y are coordinates of the nodes.
+    a numpy array (x,y), where x and y are coordinates of the node.
     '''
 
     def __init__(self, filepath):
