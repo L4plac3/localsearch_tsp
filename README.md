@@ -7,10 +7,10 @@ Implementation and testing of Local Search algorithms for the Travelling Salesma
 - [Initialization](#initialization)
 - [Point Connection](#point-connection)
 - [Nearest Neighbour](#nearest-neighbour)
-- [Randomized Nearest Neighbour Solver](#randomized-nearest-neighbour)
-- [Generic 2-opt Solver](#generic-2opt)
-- [Nearest Neighbour with 2-opt Solver](#nearest-neighbour-2opt)
-- [Randomized Nearest Neighbour with 2-opt Solver](#randomized-nearest-neighbour-2opt)
+- [Randomized Nearest Neighbour](#randomized-nearest-neighbour)
+- [PC with 2opt](#pc-with-2opt)
+- [NN with 2opt](#nn-with-2opt)
+- [RNN with 2opt](#rnn-with-2opt)
 
 ---
 
@@ -69,7 +69,7 @@ print('RNN cost: ', t.getCost('RandomizedNearestNeighbour'))
 
 ---
 
-## Generic 2opt
+## PC with 2opt
 > Starting from a first solution (PC) it optimizes it applying the 2-opt algorithm.
 ```python
 initial_path = t.path
@@ -83,7 +83,7 @@ print('G2Opt cost: ', t.getCost('TwoOpt'))
 
 ---
 
-## Nearest Neighbour 2opt
+## NN with 2opt
 > Starting from a first solution (NN) it optimizes it applying the 2-opt algorithm.
 ```python
 NN2Opt = TwoOptNN()
@@ -95,7 +95,7 @@ print('NN2Opt cost: ', t.getCost('TwoOptNN'))
 
 ---
 
-## Randomized Nearest Neighbour 2opt
+## RNN with 2opt
 > Starting from a first solution (RNN) it optimizes it applying the 2-opt algorithm.
 ```python
 RNN2Opt = TwoOptRNN()
