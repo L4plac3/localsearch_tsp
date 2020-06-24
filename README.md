@@ -11,6 +11,7 @@ Implementation and testing of Local Search algorithms for the Travelling Salesma
 - [PC with 2opt](#pc-with-2opt)
 - [NN with 2opt](#nn-with-2opt)
 - [RNN with 2opt](#rnn-with-2opt)
+- [Results](#results)
 
 ---
 
