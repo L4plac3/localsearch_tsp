@@ -41,7 +41,7 @@ t.solve(PC)
 t.plotSolution('PointConnection')
 print('PC cost: ', t.getCost('PointConnection'))
 ```
-[![INITIAL DATA](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/PC.png)]()
+[![POINT CONNECTION](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/PC.png)]()
 
 ---
 
@@ -53,7 +53,7 @@ t.solve(NN)
 t.plotSolution('NearestNeighbour')
 print('NN cost: ', t.getCost('NearestNeighbour'))
 ```
-[![INITIAL DATA](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/NN.png)]()
+[![NEAREST NEIGHBOUR](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/NN.png)]()
 
 ---
 
@@ -65,7 +65,7 @@ t.solve(RNN)
 t.plotSolution('RandomizedNearestNeighbour')
 print('RNN cost: ', t.getCost('RandomizedNearestNeighbour'))
 ```
-[![INITIAL DATA](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/RNN.png)]()
+[![RANDOMIZED NEAREST NEIGHBOUR](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/RNN.png)]()
 
 ---
 
@@ -79,7 +79,7 @@ t.solve(G2Opt)
 t.plotSolution('TwoOpt')
 print('G2Opt cost: ', t.getCost('TwoOpt'))
 ```
-[![INITIAL DATA](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/G2Opt.png)]()
+[![PC + 2OPT](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/PC2Opt.png)]()
 
 ---
 
@@ -91,7 +91,7 @@ t.solve(NN2Opt)
 t.plotSolution('TwoOptNN')
 print('NN2Opt cost: ', t.getCost('TwoOptNN'))
 ```
-[![INITIAL DATA](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/NN2Opt.png)]()
+[![NN + 2OPT](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/NN2Opt.png)]()
 
 ---
 
@@ -103,7 +103,7 @@ t.solve(RNN2Opt)
 t.plotSolution('TwoOptRNN')
 print('RNN2Opt cost: ', t.getCost('TwoOptRNN'))
 ```
-[![INITIAL DATA](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/RNN2Opt.png)]()
+[![RNN + 2OPT](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/RNN2Opt.png)]()
 
 ---
 
@@ -112,13 +112,13 @@ print('RNN2Opt cost: ', t.getCost('TwoOptRNN'))
 ```python
 t.getResults()
 ```
-| Algorithm |    Cost   |  Time  |
-|:---------:|:---------:|:------:|
-| PC        | 844745.58 |  0.001 |
-| NN        | 102594.36 |  0.020 |
-| RNN       | 101227.06 |  0.022 |
-| PC+2OPt   |  88096.62 | 12.314 |
-| NN+2Opt   |  86474.13 |  6.124 |
-| RNN+2Opt  |  85704.51 | 10.633 |
+| Algorithm |    Cost   |   Time  |
+|:---------:|:---------:|:-------:|
+| PC        | 844745.58 |   0.001 |
+| NN        | 102594.36 |   0.016 |
+| RNN       |  98205.10 |   0.020 |
+| PC+2OPt   |  84957.10 | 443.285 |
+| NN+2Opt   |  86474.13 | 131.252 |
+| RNN+2Opt  |  85704.51 | 127.434 |
 
 ---
