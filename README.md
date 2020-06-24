@@ -11,6 +11,9 @@ Implementation and testing of Local Search algorithms for the Travelling Salesma
 - [PC with 2opt](#pc-with-2opt)
 - [NN with 2opt](#nn-with-2opt)
 - [RNN with 2opt](#rnn-with-2opt)
+- [PC with 2opt and DLB](#pc-with-2opt-and-dlb)
+- [NN with 2opt and DLB](#nn-with-2opt-and-dlb)
+- [RNN with 2opt and DLB](#rnn-with-2opt-and-dlb)
 - [Results](#results)
 
 ---
@@ -108,18 +111,59 @@ print('RNN2Opt cost: ', t.getCost('TwoOptRNN'))
 
 ---
 
+## PC with 2opt and DLB
+> Starting from a first solution (PC) it optimizes it applying the 2-opt algorithm and DLB.
+```python
+initial_path = t.path
+initial_cost = t.computeCost(initial_path)
+PC2OptDLB = TwoOptDLB(initial_path=initial_path, initial_cost=initial_cost)
+t.solve(PC2OptDLB)
+t.plotSolution('TwoOptDLB')
+print('PC2OptDLB cost: ', t.getCost('TwoOptDLB'))
+```
+[![PC + 2OPT + DLB](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/PC2OptDLB.png)]()
+
+---
+
+## NN with 2opt and DLB
+> Starting from a first solution (NN) it optimizes it applying the 2-opt algorithm and DLB.
+```python
+NN2OptDLB = NN2OptDLB()
+t.solve(NN2OptDLB)
+t.plotSolution('NN2OptDLB')
+print('NN2OptDLB cost: ', t.getCost('NN2OptDLB'))
+```
+[![NN + 2OPT + DLB](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/NN2OptDLB.png)]()
+
+---
+
+## RNN with 2opt and DLB
+> Starting from a first solution (RNN) it optimizes it applying the 2-opt algorithm and DLB.
+```python
+RNN2OptDLB = RNN2OptDLB()
+t.solve(RNN2OptDLB)
+t.plotSolution('RNN2OptDLB')
+print('RNN2OptDLB cost: ', t.getCost('RNN2OptDLB'))
+```
+[![RNN + 2OPT + DLB](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/RNN2OptDLB.png)]()
+
+---
+
 ## Results
 > The results from the previous algorithms.
 ```python
-t.getResults()
+t.printResults()
 ```
-| Algorithm |    Cost   |   Time  |
-|:---------:|:---------:|:-------:|
-| PC        | 844745.58 |   0.001 |
-| NN        | 102594.36 |   0.016 |
-| RNN       |  98205.10 |   0.020 |
-| PC+2Opt   |  84957.10 | 443.285 |
-| NN+2Opt   |  86474.13 | 131.252 |
-| RNN+2Opt  |  85704.51 | 127.434 |
+| METHOD | COST | TIME |
+|-|-|-|
+| PointConnection | 844745.58 | 0.0 |
+| NearestNeighbour | 102594.36 | 0.023 |
+| RandomizedNearestNeighbour | 98595.23 | 0.017 |
+| TwoOpt | 84657.86 | 626.933 |
+| NN2Opt | 85637.62 | 230.801 |
+| RNN2Opt | 85799.91 | 262.439 |
+| TwoOptDLB | 90594.92 | 2.106 |
+| NN2OptDLB | 87256.47 | 1.625 |
+| RNN2OptDLB | 86559.63 | 1.705 |
 
 ---
