@@ -326,16 +326,20 @@ class TwoOpt(Solver):
         self.heuristic_path = self.initial_path[:]
         self.heuristic_cost = self.initial_cost
         start_time = time.time()
-        for _ in range(self.iter_num):
-            improved = False
+        # for _ in range(self.iter_num):
+        locally_optimal = False
+        while not locally_optimal:
+            locally_optimal = True
             for i in range(1, tsp.path_len-3):
+                if not locally_optimal: break
                 for j in range(i + 2, tsp.path_len):
                     gain = self.gain(i, j, tsp.dist_mat)
                     if gain > 0:
-                        improved = True
                         self.swap(i, j)
                         self.heuristic_cost -= gain
-            if not improved: break
+                        # improved = True
+                        locally_optimal = False
+            # if not improved: break
         end_time = time.time()
         self.heuristic_time = end_time - start_time
                     
