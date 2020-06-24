@@ -33,6 +33,7 @@ class TSPloader():
                 node = [float(splitted[1]), float(splitted[2])]
                 nodes.append(node)
         self.nodes = np.array(nodes)
+        f.close()
 
 
 
@@ -56,8 +57,7 @@ class TSP():
         self.path = list(range(len(nodes)))
         self.path.append(0)
         self.distMatFromNodes(nodes,dist)
-        self.path_len = len(nodes)
-
+        self.N = len(nodes)
 
     def distMatFromNodes(self, nodes, dist='euclidean'):
         '''
@@ -72,7 +72,6 @@ class TSP():
         self.dist_mat = squareform(pdist(nodes, dist))
         np.fill_diagonal(self.dist_mat, np.inf)
     
-
     def plotData(self):
         ''' 
         Plots the data if it has been specified.
@@ -83,7 +82,6 @@ class TSP():
             plt.scatter(*self.nodes.T)
             plt.show()
 
-    
     def solve(self, solver):
         '''
         Solves the current tsp instance using the provided solver (NN, 2-opt, ...).
@@ -96,7 +94,6 @@ class TSP():
                                                     'cost': solver.heuristic_cost,\
                                                     'time': solver.heuristic_time}
 
-    
     def plotSolution(self, route_key):
         '''
         Plots the solution found with a given solver.
@@ -108,21 +105,28 @@ class TSP():
             route_key = list(self.routes.keys())[route_key]
         route = self.routes[route_key]['path']
         plt.scatter(*self.nodes.T)
-        for i in range(self.path_len):
+        for i in range(self.N):
             plt.plot(*self.nodes[[route[i], route[i+1]]].T, 'b')
         plt.show()
 
-
     def getResults(self):
         '''
-        Get the costs and the elapsed times of all the routes computed via a solver.
+        Gets the costs and the elapsed times of all the computed routes.
         '''
         routes = {}
         for solver, route in self.routes.items():
             routes[solver] = {  'cost': route['cost'],\
                                 'time': route['time']}
         return routes
-
+    
+    def printResults(self):
+        '''
+        Prints the costs and the elapsed times of all the computed routes.
+        '''
+        print("{:<35} {:<15} {:<10}".format('METHOD','COST','TIME'))
+        for solver, route in self.routes.items():
+            cost, time = round(route['cost'],2), round(route['time'],3)
+            print("{:<35} {:<15} {:<10}".format(solver, cost, time))
 
     def getCost(self, route_key):
         '''
@@ -133,7 +137,6 @@ class TSP():
         '''
         return self.routes[route_key]['cost']
 
-
     def getPath(self, route_key):
         '''
         Get the path of the route computed via the solver defined by route_key.
@@ -143,7 +146,6 @@ class TSP():
         '''
         return self.routes[route_key]['path']
 
-
     def computeCost(self, path):
         '''
         Compute the cost of the given path.
@@ -152,6 +154,7 @@ class TSP():
             - path : the path of which to compute the cost
         '''
         return sum([self.dist_mat[path[i]][path[i+1]] for i in range(len(path)-1)])
+
 
 
 
@@ -189,8 +192,6 @@ class Solver(ABC):
 
 
 
-
-
 ##### NEAREST NEIGHBOUR SOLVER CLASS #####
 class PointConnection(Solver):
     '''
@@ -223,9 +224,6 @@ class PointConnection(Solver):
 
 
 
-
-
-
 ##### NEAREST NEIGHBOUR SOLVER CLASS #####
 class NearestNeighbour(Solver):
     ''' 
@@ -254,7 +252,7 @@ class NearestNeighbour(Solver):
         self.heuristic_path = [current]
         self.heuristic_cost = 0
         start_time = time.time()
-        while len(self.heuristic_path) < tsp.path_len:
+        while len(self.heuristic_path) < tsp.N:
             dist_mat[:, current] = np.inf
             neighbour = self.findNeighbour(current, dist_mat)
             self.heuristic_cost += dist_mat[current][neighbour]
@@ -267,8 +265,6 @@ class NearestNeighbour(Solver):
     
     def findNeighbour(self, node_index, dist_mat):
         return np.argmin(dist_mat[node_index])
-
-
 
 
 
@@ -287,11 +283,9 @@ class RandomizedNearestNeighbour(NearestNeighbour):
         Parameters:
             - tsp : tsp instance to solve
         '''
-        N = tsp.path_len
+        N = tsp.N
         self.initial_node = random.randint(0, N-1)
         super().solve(tsp)
-
-
 
 
 
@@ -301,7 +295,7 @@ class TwoOpt(Solver):
     Basic 2-opt algorithm.
     '''
 
-    def __init__(self, initial_path=None, initial_cost=None, iter_num=500):
+    def __init__(self, initial_path=None, initial_cost=None, dlb=False):
         ''' 
         2-opt constructor.
         
@@ -310,12 +304,12 @@ class TwoOpt(Solver):
                     The starting node for the solution.
             - initial_path : list
                     Initial path to which apply 2-opt algorithm
-            - iter_num : int
-                    Number of iterations for the local 2-opt search
+            - dlb : bool
+                    True if Don't Look Bits is applied
         '''
-        super().__init__(initial_path=initial_path, initial_cost=initial_cost, iter_num=iter_num)
+        super().__init__(initial_path=initial_path, initial_cost=initial_cost)
+        self.dlb = dlb
 
-    
     def solve(self, tsp):
         ''' 
         Solve method for a given tsp instance via 2-opt.
@@ -326,24 +320,42 @@ class TwoOpt(Solver):
         self.heuristic_path = self.initial_path[:]
         self.heuristic_cost = self.initial_cost
         start_time = time.time()
-        # for _ in range(self.iter_num):
         locally_optimal = False
+        if self.dlb: self.setAllDLB(tsp.N+1, False)
         while not locally_optimal:
             locally_optimal = True
-            for i in range(1, tsp.path_len-3):
+            for i in range(tsp.N-3):
                 if not locally_optimal: break
-                for j in range(i + 2, tsp.path_len):
+                if self.dlb:
+                    if self.dlb_arr[i]: continue
+                    node_improved = False
+                for j in range(i + 2, tsp.N - 1 if i == 0 else tsp.N):
                     gain = self.gain(i, j, tsp.dist_mat)
                     if gain > 0:
                         self.swap(i, j)
                         self.heuristic_cost -= gain
-                        # improved = True
                         locally_optimal = False
-            # if not improved: break
+                        if self.dlb: 
+                            self.setDLB([i,i+1,j,j+1],False)
+                            node_improved = True
+                        break
+                if self.dlb and not node_improved: self.setDLB([i],True)
         end_time = time.time()
         self.heuristic_time = end_time - start_time
-                    
 
+    def setAllDLB(self, len, val=False):
+        '''
+        Function which sets the values of the DLB flag for all the nodes.
+        '''
+        self.dlb_arr = [val]*len
+    
+    def setDLB(self, nodes_list, val=False):
+        '''
+        Function which sets the values of the DLB flag for the nodes in nodes_list.
+        '''
+        for node in nodes_list:
+            self.dlb_arr[node] = val
+                 
     def gain(self, i, j, dist_mat):
         '''
         Function which computes the gain of a 2-opt move.
@@ -354,7 +366,6 @@ class TwoOpt(Solver):
         d2 = dist_mat[A,C] + dist_mat[B,D]
         return d1 - d2
 
-    
     def swap(self, i, j):
         '''
         Function which makes the 2-opt move.
@@ -363,10 +374,8 @@ class TwoOpt(Solver):
 
 
 
-
-
 ##### NEAREST NEIGHBOUR WITH 2-OPT SOLVER CLASS #####
-class TwoOptNN(TwoOpt):
+class NN2Opt(TwoOpt):
     '''
     Nearest Neighbour with 2-opt class.
     '''
@@ -386,10 +395,8 @@ class TwoOptNN(TwoOpt):
 
 
 
-
-
 ##### RANDOMIZED NEAREST NEIGHBOUR WITH 2-OPT SOLVER CLASS #####
-class TwoOptRNN(TwoOpt):
+class RNN2Opt(TwoOpt):
     '''
     Randomized Nearest Neighbour with 2-opt class.
     '''
@@ -406,4 +413,71 @@ class TwoOptRNN(TwoOpt):
         self.initial_path = RNN.heuristic_path
         self.initial_cost = RNN.heuristic_cost
         super().solve(tsp)
-    
+
+
+
+##### 2-OPT + DLB SOLVER CLASS #####
+class TwoOptDLB(TwoOpt):
+    '''
+    2-opt + Don't Look Bits class.
+    '''
+
+    def __init__(self, initial_path=None, initial_cost=None):
+        super().__init__(initial_path=initial_path, initial_cost=initial_cost, dlb=True)
+
+    def solve(self, tsp):
+        ''' 
+        Solve method for a given tsp instance via 2-opt.
+        
+        Parameters:
+            - tsp : tsp instance to solve
+        '''
+        super().solve(tsp)
+
+
+
+##### NEAREST NEIGHBOUR WITH 2-OPT + DLB SOLVER CLASS #####
+class NN2OptDLB(TwoOpt):
+    '''
+    Nearest Neighbour with 2-opt + Don't Look Bits class.
+    '''
+
+    def __init__(self):
+        super().__init__(dlb=True)
+
+    def solve(self, tsp):
+        ''' 
+        Solve method for a given tsp instance via 2-opt applied to NN.
+        
+        Parameters:
+            - tsp : tsp instance to solve
+        '''
+        NN = NearestNeighbour()
+        NN.solve(tsp)
+        self.initial_path = NN.heuristic_path
+        self.initial_cost = NN.heuristic_cost
+        super().solve(tsp)
+
+
+
+##### RANDOMIZED NEAREST NEIGHBOUR WITH 2-OPT + DLB SOLVER CLASS #####
+class RNN2OptDLB(TwoOpt):
+    '''
+    Randomized Nearest Neighbour with 2-opt + Don't Look Bits class.
+    '''
+
+    def __init__(self):
+        super().__init__(dlb=True)
+
+    def solve(self, tsp):
+        ''' 
+        Solve method for a given tsp instance via 2-opt applied to RNN.
+        
+        Parameters:
+            - tsp : tsp instance to solve
+        '''
+        RNN = RandomizedNearestNeighbour()
+        RNN.solve(tsp)
+        self.initial_path = RNN.heuristic_path
+        self.initial_cost = RNN.heuristic_cost
+        super().solve(tsp)
