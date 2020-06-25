@@ -502,10 +502,7 @@ class ThreeOpt(Solver):
         self.heuristic_cost = self.initial_cost
         start_time = time.time()
         locally_optimal = False
-        counter = 0
         while not locally_optimal:
-            print(counter)
-            counter += 1
             locally_optimal = True
             for i in range(tsp.N - 4):
                 if not locally_optimal: break
@@ -514,7 +511,6 @@ class ThreeOpt(Solver):
                     for k in range(j + 2, tsp.N - 1 if i == 0 else tsp.N):
                         case, gain = self.gain(i, j, k, tsp.dist_mat)
                         if gain > 0:
-                            print(i, j, k)
                             self.move(i, j, k, case)
                             self.heuristic_cost -= gain
                             locally_optimal = False
