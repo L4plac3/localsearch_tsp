@@ -24,7 +24,7 @@ class TSPgenerator():
             - width: maximum x coordinate.
             - height: maximum y coordinate.
         '''
-        nodes = [[random.uniform(0,width), random.uniform(0,height)] 
+        nodes = [[round(random.uniform(0,width)*2)/2, round(random.uniform(0,height)*2)/2] 
                 for _ in range(number)]
         self.nodes = np.array(nodes)
 
@@ -214,38 +214,6 @@ class Solver(ABC):
 
 
 ##### NEAREST NEIGHBOUR SOLVER CLASS #####
-class PointConnection(Solver):
-    '''
-    Solver which connects the nodes in the exact order in which they appear in the list.
-    path = [0, 1, 2, ... , N-1, N, 0]
-    '''
-
-    def __init__(self, initial_node=0):
-        ''' 
-        PointConnection constructor.
-        
-        Parameters:
-            - initial_node : int
-                    The starting node for the solution.
-        '''
-        super().__init__(initial_node)
-    
-    def solve(self, tsp):
-        ''' 
-        Solve method for a given tsp instance via PointConnectio.
-        
-        Parameters:
-            - tsp : tsp instance to solve
-        '''
-        start_time = time.time()
-        self.heuristic_path = tsp.path
-        self.heuristic_cost = tsp.computeCost(tsp.path)
-        end_time = time.time()
-        self.heuristic_time = end_time - start_time
-
-
-
-##### NEAREST NEIGHBOUR SOLVER CLASS #####
 class NearestNeighbour(Solver):
     ''' 
     Nearest Neighbor solver class, derived from solver. 
@@ -345,7 +313,7 @@ class TwoOpt(Solver):
         if self.dlb: self.setAllDLB(tsp.N+1, False)
         while not locally_optimal:
             locally_optimal = True
-            for i in range(tsp.N-3):
+            for i in range(tsp.N-2):
                 if not locally_optimal: break
                 if self.dlb:
                     if self.dlb_arr[i]: continue
@@ -353,7 +321,7 @@ class TwoOpt(Solver):
                 for j in range(i + 2, tsp.N - 1 if i == 0 else tsp.N):
                     gain = self.gain(i, j, tsp.dist_mat)
                     if gain > 0:
-                        self.swap(i, j)
+                        self.swap(i+1, j)
                         self.heuristic_cost -= gain
                         locally_optimal = False
                         if self.dlb: 
@@ -391,7 +359,7 @@ class TwoOpt(Solver):
         '''
         Function which makes the 2-opt move.
         '''
-        self.heuristic_path[i+1:j+1] = reversed(self.heuristic_path[i+1:j+1])
+        self.heuristic_path[i:j+1] = reversed(self.heuristic_path[i:j+1])
 
 
 
@@ -534,15 +502,19 @@ class ThreeOpt(Solver):
         self.heuristic_cost = self.initial_cost
         start_time = time.time()
         locally_optimal = False
+        counter = 0
         while not locally_optimal:
+            print(counter)
+            counter += 1
             locally_optimal = True
-            for i in range(tsp.N-6):
+            for i in range(tsp.N - 4):
                 if not locally_optimal: break
-                for j in range(i + 2, tsp.N - 4 if i == 0 else tsp.N - 3):
+                for j in range(i + 2, tsp.N - 2):
                     if not locally_optimal: break
                     for k in range(j + 2, tsp.N - 1 if i == 0 else tsp.N):
                         case, gain = self.gain(i, j, k, tsp.dist_mat)
                         if gain > 0:
+                            print(i, j, k)
                             self.move(i, j, k, case)
                             self.heuristic_cost -= gain
                             locally_optimal = False
@@ -570,8 +542,9 @@ class ThreeOpt(Solver):
         dBF, dEF, dCD = dist_mat[B,F], dist_mat[E,F], dist_mat[C,D]
         dCE, dCF, dDF = dist_mat[C,E], dist_mat[C,F], dist_mat[D,F]
         
+        d0 = dAB + dCD + dEF
         d = [0]*8 # distances
-        d[0] = dAB + dCD + dEF
+        d[0] = np.inf
         d[1] = dAE + dCD + dBF
         d[2] = dAB + dCE + dDF
         d[3] = dAC + dBD + dEF
@@ -580,7 +553,10 @@ class ThreeOpt(Solver):
         d[6] = dAD + dCE + dBF
         d[7] = dAD + dBE + dCF
 
-        return np.argmin(d), d[0]-min(d)
+        gain_vec = [d0 - i for i in d]
+        case, gain = np.argmax(gain_vec), np.max(gain_vec)
+
+        return case, gain
     
     def move(self, i, j, k, opt_case):
         '''
@@ -596,31 +572,34 @@ class ThreeOpt(Solver):
             pass
         # 2-opt moves
         elif opt_case == 1:
-            self.swap(i,k)
+            self.swap(i+1,k)
         elif opt_case == 2:
-            self.swap(j,k)
+            self.swap(j+1,k)
         elif opt_case == 3:
-            self.swap(i,j)
+            self.swap(i+1,j)
         # 3-opt moves
         elif opt_case == 4:
-            self.swap(i,j)
-            self.swap(j,k)
+            self.swap(i+1,j)
+            self.swap(j+1,k)
         elif opt_case == 5:
-            self.swap(i,k)
-            self.swap(j,k)
+            self.swap(i+1,k)
+            self.swap(j+1,k)
         elif opt_case == 6:
-            self.swap(i,k)
-            self.swap(i,j)
+            self.swap(i+1,k)
+            self.swap(i+1,j)
         elif opt_case == 7:
-            self.swap(i,j)
-            self.swap(j,k)
-            self.swap(i,k)
+            self.swap(i+1,k)
+            self.swap(i+1,j)
+            self.swap(j+1,k)
 
     def swap(self, i, j):
         '''
-        Function which makes the 2-opt move.
+        Function which reverses the heuristic path from i-th component to j-th 
+        component.
+
+        swap([0,1,2,3,4,5,6], 2, 5) -> [0,1,5,4,3,2,6]
         '''
-        self.heuristic_path[i+1:j+1] = reversed(self.heuristic_path[i+1:j+1])
+        self.heuristic_path[i:j+1] = reversed(self.heuristic_path[i:j+1])
 
 
 
@@ -641,4 +620,25 @@ class NN3Opt(ThreeOpt):
         NN.solve(tsp)
         self.initial_path = NN.heuristic_path
         self.initial_cost = NN.heuristic_cost
+        super().solve(tsp)
+
+
+
+##### RNADOMIZED NEAREST NEIGHBOUR WITH 3-OPT SOLVER CLASS #####
+class RNN3Opt(ThreeOpt):
+    '''
+    Randomized Nearest Neighbour with 3-opt class.
+    '''
+
+    def solve(self, tsp):
+        ''' 
+        Solve method for a given tsp instance via 3-opt applied to RNN.
+        
+        Parameters:
+            - tsp : tsp instance to solve
+        '''
+        RNN = RandomizedNearestNeighbour()
+        RNN.solve(tsp)
+        self.initial_path = RNN.heuristic_path
+        self.initial_cost = RNN.heuristic_cost
         super().solve(tsp)
