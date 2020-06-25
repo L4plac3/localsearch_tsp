@@ -9,7 +9,7 @@ import time
 
 
 
-##### TSP-LOADER CLASS #####
+##### TSP-GENERATOR CLASS #####
 class TSPgenerator():
     '''
     Basic class to generate a given number of cities at random.
