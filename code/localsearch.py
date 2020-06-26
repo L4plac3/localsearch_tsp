@@ -518,6 +518,7 @@ class ThreeOpt(Solver):
         end_time = time.time()
         self.heuristic_time = end_time - start_time
 
+
     def gain(self, i, j, k, dist_mat):
         '''
         Function which computes the gain of a 3-opt move.
@@ -529,25 +530,19 @@ class ThreeOpt(Solver):
         Returns the case and the gain of the opt move 
         which returns the minimum cost.
         '''
-        A, B, C, D, E, F =  self.heuristic_path[i], self.heuristic_path[i+1],\
-                            self.heuristic_path[j], self.heuristic_path[j+1],\
-                            self.heuristic_path[k], self.heuristic_path[k+1]
+        A, B = self.heuristic_path[i], self.heuristic_path[i+1]
+        C, D = self.heuristic_path[j], self.heuristic_path[j+1]
+        E, F = self.heuristic_path[k], self.heuristic_path[k+1]
         
-        dAB, dAC, dAD = dist_mat[A,B], dist_mat[A,C], dist_mat[A,D] 
-        dAE, dBD, dBE = dist_mat[A,E], dist_mat[B,D], dist_mat[B,E]
-        dBF, dEF, dCD = dist_mat[B,F], dist_mat[E,F], dist_mat[C,D]
-        dCE, dCF, dDF = dist_mat[C,E], dist_mat[C,F], dist_mat[D,F]
-        
-        d0 = dAB + dCD + dEF
-        d = [0]*8 # distances
-        d[0] = np.inf
-        d[1] = dAE + dCD + dBF
-        d[2] = dAB + dCE + dDF
-        d[3] = dAC + dBD + dEF
-        d[4] = dAC + dBE + dDF
-        d[5] = dAE + dBD + dCF
-        d[6] = dAD + dCE + dBF
-        d[7] = dAD + dBE + dCF
+        d0 = dist_mat[A,B] + dist_mat[C,D] + dist_mat[E,F]
+        d = [np.inf]*8 # distances vector
+        d[1] = dist_mat[A,E] + dist_mat[C,D] + dist_mat[B,F]
+        d[2] = dist_mat[A,B] + dist_mat[C,E] + dist_mat[D,F]
+        d[3] = dist_mat[A,C] + dist_mat[B,D] + dist_mat[E,F]
+        d[4] = dist_mat[A,C] + dist_mat[B,E] + dist_mat[D,F]
+        d[5] = dist_mat[A,E] + dist_mat[B,D] + dist_mat[C,F]
+        d[6] = dist_mat[A,D] + dist_mat[C,E] + dist_mat[B,F]
+        d[7] = dist_mat[A,D] + dist_mat[B,E] + dist_mat[C,F]
 
         gain_vec = [d0 - i for i in d]
         case, gain = np.argmax(gain_vec), np.max(gain_vec)
@@ -578,15 +573,15 @@ class ThreeOpt(Solver):
             self.swap(i+1,j)
             self.swap(j+1,k)
         elif opt_case == 5:
+            self.swap(i+1,j)
             self.swap(i+1,k)
-            self.swap(j+1,k)
         elif opt_case == 6:
+            self.swap(j+1,k)
             self.swap(i+1,k)
-            self.swap(i+1,j)
         elif opt_case == 7:
-            self.swap(i+1,k)
             self.swap(i+1,j)
             self.swap(j+1,k)
+            self.swap(i+1,k)
 
     def swap(self, i, j):
         '''
