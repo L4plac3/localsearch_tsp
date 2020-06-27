@@ -32,7 +32,6 @@ class TSPgenerator():
 
 
 
-
 ##### TSP-LOADER CLASS #####
 class TSPloader():
     '''
@@ -517,7 +516,6 @@ class ThreeOpt(Solver):
                             break
         end_time = time.time()
         self.heuristic_time = end_time - start_time
-
 
     def gain(self, i, j, k, dist_mat):
         '''
