@@ -1,0 +1,26 @@
+localsearch_tsp
+|---- README.md
+|---- code
+|     |---- localsearch
+|     |     |---- __init__.py
+|     |     |---- solvers.py
+|     |     |     |---- Solver
+|     |     |     |---- NN
+|     |     |     |---- RepNN
+|     |     |     |---- TwoOpt
+|     |     |     |---- NN2Opt
+|     |     |     |---- RepNN2Opt
+|     |     |     |---- NN2OptDLB
+|     |     |     |---- RepNN2OptDLB
+|     |     |     |---- NN2OptFR
+|     |     |     |---- RepNN2OptFR
+|     |     |     |---- ThreeOpt
+|     |     |     |---- NN3Opt
+|     |     |     |---- RepNN3Opt
+|     |     |     |---- NN3OptDLB
+|     |     |     |---- RepNN3OptDLB
+|     |     |---- tsp.py
+|     |     |     |---- Generator
+|     |     |     |---- Loader
+|     |     |     |---- TSP
+|     |---- test.ipynb

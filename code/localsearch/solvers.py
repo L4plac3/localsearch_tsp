@@ -109,27 +109,6 @@ class RepNN(NN):
 
 
 
-##### RANDOMIZED NEAREST NEIGHBOUR SOLVER CLASS #####
-class RandNN(NN):
-    ''' 
-    Randomized Nearest Neighbour solver class, derived from Nearest Neighbour. 
-    The initial node is computed randomly.
-    '''
-
-    def solve(self, tsp):
-        '''
-        Same solve method derived from Nearest Neighbour with the only
-        difference that the initial node is random.
-        
-        Parameters:
-            - tsp : tsp instance to solve
-        '''
-        N = tsp.N
-        self.initial_node = random.randint(0, N-1)
-        super().solve(tsp)
-
-
-
 ##### 2-OPT SOLVER CLASS #####
 class TwoOpt(Solver):
     '''
@@ -191,12 +170,14 @@ class TwoOpt(Solver):
         '''
         A, B, C, D = self.heuristic_path[i], self.heuristic_path[i+1],\
                      self.heuristic_path[j], self.heuristic_path[j+1]
-        d1 = dist_mat[A,B] + dist_mat[C,D]
-        d2 = dist_mat[A,C] + dist_mat[B,D]
+        dAB, dCD, dAC, dBD = dist_mat[A,B], dist_mat[C,D],\
+                             dist_mat[A,C], dist_mat[B,D]
+        d1 = dAB + dCD
+        d2 = dAC + dBD
         if self.fixed_radius:
-            radius = dist_mat[A,B]
-            if dist_mat[A,C] > radius:
-                if dist_mat[B,D] > radius:
+            radius = max(dAB,dCD)
+            if dAC > radius:
+                if dBD > radius:
                     return -1
         return d1 - d2
 
@@ -263,27 +244,6 @@ class RepNN2Opt(TwoOpt):
 
 
 
-##### RANDOMIZED NEAREST NEIGHBOUR WITH 2-OPT SOLVER CLASS #####
-class RandNN2Opt(TwoOpt):
-    '''
-    Randomized Nearest Neighbour with 2-opt class.
-    '''
-
-    def solve(self, tsp):
-        ''' 
-        Solve method for a given tsp instance via 2-opt applied to RandNN.
-        
-        Parameters:
-            - tsp : tsp instance to solve
-        '''
-        solver = RandNN()
-        solver.solve(tsp)
-        self.initial_path = solver.heuristic_path
-        self.initial_cost = solver.heuristic_cost
-        super().solve(tsp)
-
-
-
 ##### NEAREST NEIGHBOUR WITH 2-OPT + DLB SOLVER CLASS #####
 class NN2OptDLB(TwoOpt):
     '''
@@ -332,30 +292,6 @@ class RepNN2OptDLB(TwoOpt):
 
 
 
-##### RANDOMIZED NEAREST NEIGHBOUR WITH 2-OPT + DLB SOLVER CLASS #####
-class RandNN2OptDLB(TwoOpt):
-    '''
-    Randomized Nearest Neighbour with 2-opt + Don't Look Bits class.
-    '''
-
-    def __init__(self):
-        super().__init__(dlb=True)
-
-    def solve(self, tsp):
-        ''' 
-        Solve method for a given tsp instance via 2-opt applied to RandNN.
-        
-        Parameters:
-            - tsp : tsp instance to solve
-        '''
-        solver = RandNN()
-        solver.solve(tsp)
-        self.initial_path = solver.heuristic_path
-        self.initial_cost = solver.heuristic_cost
-        super().solve(tsp)
-
-
-
 ##### NEAREST NEIGHBOUR WITH 2-OPT + FIXED-RADIUS SOLVER CLASS #####
 class NN2OptFR(TwoOpt):
     '''
@@ -397,30 +333,6 @@ class RepNN2OptFR(TwoOpt):
             - tsp : tsp instance to solve
         '''
         solver = RepNN()
-        solver.solve(tsp)
-        self.initial_path = solver.heuristic_path
-        self.initial_cost = solver.heuristic_cost
-        super().solve(tsp)
-
-
-
-##### RANDOMIZED NEAREST NEIGHBOUR WITH 2-OPT + FIXED-RADIUS SOLVER CLASS #####
-class RandNN2OptFR(TwoOpt):
-    '''
-    Randomized Nearest Neighbour with 2-opt + Fixed-Radius class.
-    '''
-
-    def __init__(self):
-        super().__init__(fixed_radius=True)
-
-    def solve(self, tsp):
-        ''' 
-        Solve method for a given tsp instance via 2-opt applied to RandNN.
-        
-        Parameters:
-            - tsp : tsp instance to solve
-        '''
-        solver = RandNN()
         solver.solve(tsp)
         self.initial_path = solver.heuristic_path
         self.initial_cost = solver.heuristic_cost
@@ -613,27 +525,6 @@ class RepNN3Opt(ThreeOpt):
 
 
 
-##### RANDOMIZED NEAREST NEIGHBOUR WITH 3-OPT SOLVER CLASS #####
-class RandNN3Opt(ThreeOpt):
-    '''
-    Randomized Nearest Neighbour with 3-opt class.
-    '''
-
-    def solve(self, tsp):
-        ''' 
-        Solve method for a given tsp instance via 3-opt applied to RandNN.
-        
-        Parameters:
-            - tsp : tsp instance to solve
-        '''
-        solver = RandNN()
-        solver.solve(tsp)
-        self.initial_path = solver.heuristic_path
-        self.initial_cost = solver.heuristic_cost
-        super().solve(tsp)
-
-
-
 ##### NEAREST NEIGHBOUR WITH 3-OPT + DLB SOLVER CLASS #####
 class NN3OptDLB(ThreeOpt):
     '''
@@ -675,30 +566,6 @@ class RepNN3OptDLB(ThreeOpt):
             - tsp : tsp instance to solve
         '''
         solver = RepNN()
-        solver.solve(tsp)
-        self.initial_path = solver.heuristic_path
-        self.initial_cost = solver.heuristic_cost
-        super().solve(tsp)
-
-
-
-##### RANDOMIZED NEAREST NEIGHBOUR WITH 3-OPT + DLB SOLVER CLASS #####
-class RandNN3OptDLB(ThreeOpt):
-    '''
-    Randomized Nearest Neighbour with 3-opt + Don't Look Bits class.
-    '''
-
-    def __init__(self):
-        super().__init__(dlb=True)
-
-    def solve(self, tsp):
-        ''' 
-        Solve method for a given tsp instance via 2-opt applied to RandNN.
-        
-        Parameters:
-            - tsp : tsp instance to solve
-        '''
-        solver = RandNN()
         solver.solve(tsp)
         self.initial_path = solver.heuristic_path
         self.initial_cost = solver.heuristic_cost

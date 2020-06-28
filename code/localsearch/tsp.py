@@ -86,16 +86,6 @@ class TSP():
         '''
         self.dist_mat = squareform(pdist(nodes, dist))
         np.fill_diagonal(self.dist_mat, np.inf)
-    
-    def plotData(self):
-        ''' 
-        Plots the data if it has been specified.
-        '''
-        if self.nodes == []:
-            raise Exception('No data of the instance has been loaded')
-        else:
-            plt.scatter(*self.nodes.T)
-            plt.show()
 
     def solve(self, solver):
         '''
@@ -108,21 +98,6 @@ class TSP():
         self.routes[solver.__class__.__name__] = {  'path': solver.heuristic_path,\
                                                     'cost': solver.heuristic_cost,\
                                                     'time': solver.heuristic_time}
-
-    def plotSolution(self, route_key):
-        '''
-        Plots the solution found with a given solver.
-
-        Parameters:
-            - route_key : name of the solver (a.k.a. key in the routes dictionary)
-        '''
-        if isinstance(route_key, int):
-            route_key = list(self.routes.keys())[route_key]
-        route = self.routes[route_key]['path']
-        plt.scatter(*self.nodes.T)
-        for i in range(self.N):
-            plt.plot(*self.nodes[[route[i], route[i+1]]].T, 'b')
-        plt.show()
 
     def getResults(self):
         '''
@@ -142,30 +117,28 @@ class TSP():
         for solver, route in self.routes.items():
             cost, time = round(route['cost'],2), round(route['time'],3)
             print("{:<35} {:<15} {:<10}".format(solver, cost, time))
-
-    def getCost(self, route_key):
+    
+    def plotData(self):
+        ''' 
+        Plots the data if it has been specified.
         '''
-        Get the costs of the route computed via the solver defined by route_key.
+        if self.nodes == []:
+            raise Exception('No data of the instance has been loaded')
+        else:
+            plt.scatter(*self.nodes.T)
+            plt.show()
+
+    def plotSolution(self, route_key):
+        '''
+        Plots the solution found with a given solver.
 
         Parameters:
             - route_key : name of the solver (a.k.a. key in the routes dictionary)
         '''
-        return self.routes[route_key]['cost']
-
-    def getPath(self, route_key):
-        '''
-        Get the path of the route computed via the solver defined by route_key.
-
-        Parameters:
-            - route_key : name of the solver (a.k.a. key in the routes dictionary)
-        '''
-        return self.routes[route_key]['path']
-
-    def computeCost(self, path):
-        '''
-        Compute the cost of the given path.
-
-        Parameters:
-            - path : the path of which to compute the cost
-        '''
-        return sum([self.dist_mat[path[i]][path[i+1]] for i in range(len(path)-1)])
+        if isinstance(route_key, int):
+            route_key = list(self.routes.keys())[route_key]
+        route = self.routes[route_key]['path']
+        plt.scatter(*self.nodes.T)
+        for i in range(self.N):
+            plt.plot(*self.nodes[[route[i], route[i+1]]].T, 'b')
+        plt.show()
