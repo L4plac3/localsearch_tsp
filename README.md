@@ -7,16 +7,16 @@ Implementation and testing of Local Search algorithms for the Travelling Salesma
 - [Initialization](#initialization)
 - [Nearest Neighbour](#nearest-neighbour)
 - [Repeated Nearest Neighbour](#repeated-nearest-neighbour)
-- [Randomized Nearest Neighbour](#randomized-nearest-neighbour)
 - [Nearest Neighbour with 2opt](#nearest-neighbour-with-2opt)
 - [Repeated Nearest Neighbour with 2opt](#repeated-nearest-neighbour-with-2opt)
-- [Randomized Nearest Neighbour with 2opt](#randomized-nearest-neighbour-with-2opt)
 - [Nearest Neighbour with 2opt and DLB](#nearest-neighbour-with-2opt-and-dlb)
 - [Repeated Nearest Neighbour with 2opt and DLB](#repeated-nearest-neighbour-with-2opt-and-dlb)
-- [Randomized Nearest Neighbour with 2opt and DLB](#randomized-nearest-neighbour-with-2opt-and-dlb)
+- [Nearest Neighbour with 2opt and Fixed Radius](#nearest-neighbour-with-2opt-and-fixed-radius)
+- [Repeated Nearest Neighbour with 2opt and Fixed Radius](#repeated-nearest-neighbour-with-2opt-and-fixed-radius)
 - [Nearest Neighbour with 3opt](#nearest-neighbour-with-3opt)
 - [Repeated Nearest Neighbour with 3opt](#repeated-nearest-neighbour-with-3opt)
-- [Randomized Nearest Neighbour with 3opt](#randomized-nearest-neighbour-with-3opt)
+- [Nearest Neighbour with 3opt and DLB](#nearest-neighbour-with-3opt-and-dlb)
+- [Repeated Nearest Neighbour with 3opt and DLB](#repeated-nearest-neighbour-with-3opt-and-dlb)
 - [Results](#results)
 
 ---
@@ -40,7 +40,7 @@ t = tsp.TSP(data.nodes)
 # Plotting the initial data
 t.plotData()
 ```
-[![INITIAL DATA](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/xfq131_initial_data.png)]()
+[![INITIAL DATA](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/xfq131.png)]()
 
 ---
 
@@ -66,17 +66,6 @@ t.plotSolution('RepNN')
 
 ---
 
-## Randomized Nearest Neighbour
-> Starting from a first random node it connects it to the nearest one and so on.
-```python
-RandNN = slv.RandNN()
-t.solve(RandNN)
-t.plotSolution('RandNN')
-```
-[![RANDOMIZED NEAREST NEIGHBOUR](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/xfq131_rand_nn.png)]()
-
----
-
 ## Nearest Neighbour with 2opt
 > Starting from a first solution (NN) it optimizes it applying the 2-opt algorithm.
 ```python
@@ -96,17 +85,6 @@ t.solve(RepNN2Opt)
 t.plotSolution('RepNN2Opt')
 ```
 [![RepNN + 2OPT](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/xfq131_rep_nn_2opt.png)]()
-
----
-
-## Randomized Nearest Neighbour with 2opt
-> Starting from a first solution (RandNN) it optimizes it applying the 2-opt algorithm.
-```python
-RandNN2Opt = slv.RandNN2Opt()
-t.solve(RandNN2Opt)
-t.plotSolution('RandNN2Opt')
-```
-[![RandNN + 2OPT](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/xfq131_rand_nn_2opt.png)]()
 
 ---
 
@@ -132,14 +110,25 @@ t.plotSolution('RepNN2OptDLB')
 
 ---
 
-## Randomized Nearest Neighbour with 2opt and DLB
-> Starting from a first solution (RandNN) it optimizes it applying the 2-opt algorithm and DLB.
+## Nearest Neighbour with 2opt and Fixed Radius
+> Starting from a first solution (NN) it optimizes it applying the 2-opt algorithm and Fixed-Radius.
 ```python
-RandNN2OptDLB = slv.RandNN2OptDLB()
-t.solve(RandNN2OptDLB)
-t.plotSolution('RandNN2OptDLB')
+NN2OptFR = slv.NN2OptFR()
+t.solve(NN2OptFR)
+t.plotSolution('NN2OptFR')
 ```
-[![RandNN + 2OPT + DLB](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/xfq131_rand_nn_2opt_dlb.png)]()
+[![NN + 2OPT + FR](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/xfq131_nn_2opt_fr.png)]()
+
+---
+
+## Repeated Nearest Neighbour with 2opt and Fixed Radius
+> Starting from a first solution (RepNN) it optimizes it applying the 2-opt algorithm and Fixed-Radius.
+```python
+RepNN2OptFR = slv.RepNN2OptFR()
+t.solve(RepNN2OptFR)
+t.plotSolution('RepNN2OptFR')
+```
+[![RepNN + 2OPT + FR](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/xfq131_rep_nn_2opt_fr.png)]()
 
 ---
 
@@ -165,14 +154,25 @@ t.plotSolution('RepNN3Opt')
 
 ---
 
-## Randomized Nearest Neighbour with 3opt
-> Starting from a first solution (RandNN) it optimizes it applying the 3-opt algorithm.
+## Nearest Neighbour with 3opt and DLB
+> Starting from a first solution (NN) it optimizes it applying the 3-opt algorithm and DLB.
 ```python
-RandNN3Opt = slv.RandNN3Opt()
-t.solve(RandNN3Opt)
-t.plotSolution('RandNN3Opt')
+NN3OptDLB = slv.NN3OptDLB()
+t.solve(NN3OptDLB)
+t.plotSolution('NN3OptDLB')
 ```
-[![RandNN + 3OPT](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/xfq131_rand_nn_3opt.png)]()
+[![NN + 3OPT + DLB](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/xfq131_nn_3opt_dlb.png)]()
+
+---
+
+## Repeated Nearest Neighbour with 3opt and DLB
+> Starting from a first solution (RepNN) it optimizes it applying the 3-opt algorithm and DLB.
+```python
+RepNN3OptDLB = slv.RepNN3OptDLB()
+t.solve(RepNN3OptDLB)
+t.plotSolution('RepNN3OptDLB')
+```
+[![RepNN + 3OPT + DLB](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/xfq131_rep_nn_3opt_dlb.png)]()
 
 ---
 
@@ -183,17 +183,17 @@ t.printResults()
 ```
 | METHOD | COST | TIME |
 |-|-|-|
-| NN | 709.52 | 0.0 |
-| RepNN | 628.72 | 0.248 |
-| RandNN | 725.26 | 0.0 |
-| NN2Opt | 611.46 | 0.824 |
-| RepNN2Opt | 588.99 | 0.461 |
-| RandNN2Opt | 606.25 | 0.841 |
-| NN2OptDLB | 617.12 | 0.058 |
-| RepNN2OptDLB | 588.0 | 0.049 |
-| RandNN2OptDLB | 610.77 | 0.08 |
-| NN3Opt | 596.09 | 104.483 |
-| RepNN3Opt | 582.67 | 59.789 |
-| RandNN3Opt | 584.54 | 133.823 |
+| NN | 709.52 | 0.001 |
+| RepNN | 628.72 | 0.162 |
+| NN2Opt | 611.46 | 0.565 |
+| RepNN2Opt | 588.99 | 0.319 |
+| NN2OptDLB | 617.12 | 0.064 |
+| RepNN2OptDLB | 588.0 | 0.032 |
+| NN2OptFR | 611.46 | 0.515 |
+| RepNN2OptFR | 588.99 | 0.391 |
+| NN3Opt | 596.09 | 76.672 |
+| RepNN3Opt | 582.67 | 46.277 |
+| NN3OptDLB | 592.81 | 23.899 |
+| RepNN3OptDLB | 583.95 | 18.987 |
 
 ---
