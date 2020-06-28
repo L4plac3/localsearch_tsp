@@ -40,7 +40,7 @@ t = tsp.TSP(data.nodes)
 # Plotting the initial data
 t.plotData()
 ```
-[![INITIAL DATA](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/xfq131.png)]()
+[![INITIAL DATA](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/xqf131.png)]()
 
 ---
 
@@ -51,7 +51,7 @@ NN = slv.NN()
 t.solve(NN)
 t.plotSolution('NN')
 ```
-[![NEAREST NEIGHBOUR](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/xfq131_nn.png)]()
+[![NEAREST NEIGHBOUR](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/xqf131_nn.png)]()
 
 ---
 
@@ -62,7 +62,7 @@ RepNN = slv.RepNN()
 t.solve(RepNN)
 t.plotSolution('RepNN')
 ```
-[![REPEATED NEAREST NEIGHBOUR](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/xfq131_rep_nn.png)]()
+[![REPEATED NEAREST NEIGHBOUR](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/xqf131_rep_nn.png)]()
 
 ---
 
@@ -73,7 +73,7 @@ NN2Opt = slv.NN2Opt()
 t.solve(NN2Opt)
 t.plotSolution('NN2Opt')
 ```
-[![NN + 2OPT](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/xfq131_nn_2opt.png)]()
+[![NN + 2OPT](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/xqf131_nn_2opt.png)]()
 
 ---
 
@@ -84,7 +84,7 @@ RepNN2Opt = slv.RepNN2Opt()
 t.solve(RepNN2Opt)
 t.plotSolution('RepNN2Opt')
 ```
-[![RepNN + 2OPT](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/xfq131_rep_nn_2opt.png)]()
+[![RepNN + 2OPT](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/xqf131_rep_nn_2opt.png)]()
 
 ---
 
@@ -95,7 +95,7 @@ NN2OptDLB = slv.NN2OptDLB()
 t.solve(NN2OptDLB)
 t.plotSolution('NN2OptDLB')
 ```
-[![NN + 2OPT + DLB](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/xfq131_nn_2opt_dlb.png)]()
+[![NN + 2OPT + DLB](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/xqf131_nn_2opt_dlb.png)]()
 
 ---
 
@@ -106,7 +106,7 @@ RepNN2OptDLB = slv.RepNN2OptDLB()
 t.solve(RepNN2OptDLB)
 t.plotSolution('RepNN2OptDLB')
 ```
-[![RepNN + 2OPT + DLB](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/xfq131_rep_nn_2opt_dlb.png)]()
+[![RepNN + 2OPT + DLB](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/xqf131_rep_nn_2opt_dlb.png)]()
 
 ---
 
@@ -117,7 +117,7 @@ NN2OptFR = slv.NN2OptFR()
 t.solve(NN2OptFR)
 t.plotSolution('NN2OptFR')
 ```
-[![NN + 2OPT + FR](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/xfq131_nn_2opt_fr.png)]()
+[![NN + 2OPT + FR](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/xqf131_nn_2opt_fr.png)]()
 
 ---
 
@@ -128,7 +128,7 @@ RepNN2OptFR = slv.RepNN2OptFR()
 t.solve(RepNN2OptFR)
 t.plotSolution('RepNN2OptFR')
 ```
-[![RepNN + 2OPT + FR](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/xfq131_rep_nn_2opt_fr.png)]()
+[![RepNN + 2OPT + FR](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/xqf131_rep_nn_2opt_fr.png)]()
 
 ---
 
@@ -139,7 +139,7 @@ NN3Opt = slv.NN3Opt()
 t.solve(NN3Opt)
 t.plotSolution('NN3Opt')
 ```
-[![NN + 3OPT](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/xfq131_nn_3opt.png)]()
+[![NN + 3OPT](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/xqf131_nn_3opt.png)]()
 
 ---
 
@@ -150,7 +150,7 @@ RepNN3Opt = slv.RepNN3Opt()
 t.solve(RepNN3Opt)
 t.plotSolution('RepNN3Opt')
 ```
-[![RepNN + 3OPT](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/xfq131_rep_nn_3opt.png)]()
+[![RepNN + 3OPT](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/xqf131_rep_nn_3opt.png)]()
 
 ---
 
@@ -161,7 +161,7 @@ NN3OptDLB = slv.NN3OptDLB()
 t.solve(NN3OptDLB)
 t.plotSolution('NN3OptDLB')
 ```
-[![NN + 3OPT + DLB](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/xfq131_nn_3opt_dlb.png)]()
+[![NN + 3OPT + DLB](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/xqf131_nn_3opt_dlb.png)]()
 
 ---
 
@@ -172,7 +172,7 @@ RepNN3OptDLB = slv.RepNN3OptDLB()
 t.solve(RepNN3OptDLB)
 t.plotSolution('RepNN3OptDLB')
 ```
-[![RepNN + 3OPT + DLB](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/xfq131_rep_nn_3opt_dlb.png)]()
+[![RepNN + 3OPT + DLB](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/xqf131_rep_nn_3opt_dlb.png)]()
 
 ---
 
