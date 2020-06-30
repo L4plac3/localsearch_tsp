@@ -40,7 +40,6 @@ class Loader():
         Parameters:
             - filepath : path to the .tsp file
         '''
-        self.filepath = filepath
         f = open(filepath, 'r')
         nodes = []
         for line in f.readlines():
@@ -69,8 +68,6 @@ class TSP():
         '''
         self.routes = {}
         self.nodes = nodes
-        self.path = list(range(len(nodes)))
-        self.path.append(0)
         self.distMatFromNodes(nodes,dist)
         self.N = len(nodes)
 
