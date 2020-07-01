@@ -159,8 +159,6 @@ t.printResults()
 ```
 | METHOD | COST | TIME |
 |-|-|-|
-| NN | 709.52 | 0.001 |
-| RepNN | 628.72 | 0.162 |
 | NN2Opt | 611.46 | 0.565 |
 | RepNN2Opt | 588.99 | 0.319 |
 | NN2OptDLB | 617.12 | 0.064 |
