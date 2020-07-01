@@ -11,8 +11,6 @@ Implementation and testing of Local Search algorithms for the Travelling Salesma
 - [Repeated Nearest Neighbour with 2opt](#repeated-nearest-neighbour-with-2opt)
 - [Nearest Neighbour with 2opt and DLB](#nearest-neighbour-with-2opt-and-dlb)
 - [Repeated Nearest Neighbour with 2opt and DLB](#repeated-nearest-neighbour-with-2opt-and-dlb)
-- [Nearest Neighbour with 2opt and Fixed Radius](#nearest-neighbour-with-2opt-and-fixed-radius)
-- [Repeated Nearest Neighbour with 2opt and Fixed Radius](#repeated-nearest-neighbour-with-2opt-and-fixed-radius)
 - [Nearest Neighbour with 3opt](#nearest-neighbour-with-3opt)
 - [Repeated Nearest Neighbour with 3opt](#repeated-nearest-neighbour-with-3opt)
 - [Nearest Neighbour with 3opt and DLB](#nearest-neighbour-with-3opt-and-dlb)
@@ -107,28 +105,6 @@ t.solve(RepNN2OptDLB)
 t.plotSolution('RepNN2OptDLB')
 ```
 [![RepNN + 2OPT + DLB](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/xqf131_rep_nn_2opt_dlb.png)]()
-
----
-
-## Nearest Neighbour with 2opt and Fixed Radius
-> Starting from a first solution (NN) it optimizes it applying the 2-opt algorithm and Fixed-Radius.
-```python
-NN2OptFR = slv.NN2OptFR()
-t.solve(NN2OptFR)
-t.plotSolution('NN2OptFR')
-```
-[![NN + 2OPT + FR](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/xqf131_nn_2opt_fr.png)]()
-
----
-
-## Repeated Nearest Neighbour with 2opt and Fixed Radius
-> Starting from a first solution (RepNN) it optimizes it applying the 2-opt algorithm and Fixed-Radius.
-```python
-RepNN2OptFR = slv.RepNN2OptFR()
-t.solve(RepNN2OptFR)
-t.plotSolution('RepNN2OptFR')
-```
-[![RepNN + 2OPT + FR](https://raw.githubusercontent.com/L4plac3/localsearch_tsp/master/images/xqf131_rep_nn_2opt_fr.png)]()
 
 ---
 
