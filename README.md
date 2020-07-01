@@ -165,8 +165,6 @@ t.printResults()
 | RepNN2Opt | 588.99 | 0.319 |
 | NN2OptDLB | 617.12 | 0.064 |
 | RepNN2OptDLB | 588.0 | 0.032 |
-| NN2OptFR | 611.46 | 0.515 |
-| RepNN2OptFR | 588.99 | 0.391 |
 | NN3Opt | 596.09 | 76.672 |
 | RepNN3Opt | 582.67 | 46.277 |
 | NN3OptDLB | 592.81 | 23.899 |
