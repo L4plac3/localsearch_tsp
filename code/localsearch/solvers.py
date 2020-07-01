@@ -148,7 +148,7 @@ class TwoOpt(Solver):
         if self.dlb: self.setAllDLB(tsp.N+1, False)
         while not locally_optimal:
             locally_optimal = True
-            for i in range(tsp.N):
+            for i in range(tsp.N - 2):
                 A, B = self.heuristic_path[i], self.heuristic_path[i+1]
                 if not locally_optimal: break
                 if self.dlb:
