@@ -22,6 +22,8 @@ class Solver(ABC):
         self.initial_node = initial_node
         self.initial_path = initial_path
         self.initial_cost = initial_cost
+        self.heuristic_path = None
+        self.heuristic_cost = None
 
     @abstractmethod
     def solve(self, tsp):
@@ -32,6 +34,10 @@ class Solver(ABC):
             - tsp : tsp instance to solve
         '''
         pass
+
+    def cost(self, dist_mat):
+        self.heuristic_cost = sum(dist_mat[self.heuristic_path[i],self.heuristic_path[i+1]]
+                            for i in range(len(self.heuristic_path)-1))
 
 
 
@@ -61,18 +67,16 @@ class NN(Solver):
         dist_mat = np.copy(tsp.dist_mat)
         current = self.initial_node
         self.heuristic_path = [current]
-        self.heuristic_cost = 0
         start_time = time.time()
         while len(self.heuristic_path) < tsp.N:
             dist_mat[:, current] = np.inf
             neighbour = self.findNeighbour(current, dist_mat)
-            self.heuristic_cost += dist_mat[current][neighbour]
             self.heuristic_path.append(neighbour)
             current = neighbour
+        self.heuristic_path.append(self.initial_node)
         end_time = time.time()
         self.heuristic_time = end_time - start_time
-        self.heuristic_cost += tsp.dist_mat[current][self.initial_node]
-        self.heuristic_path.append(self.initial_node)
+        self.cost(tsp.dist_mat)
     
     def findNeighbour(self, node_index, dist_mat):
         return np.argmin(dist_mat[node_index])
@@ -139,30 +143,36 @@ class TwoOpt(Solver):
             - tsp : tsp instance to solve
         '''
         self.heuristic_path = self.initial_path[:]
-        self.heuristic_cost = self.initial_cost
         start_time = time.time()
         locally_optimal = False
         if self.dlb: self.setAllDLB(tsp.N+1, False)
         while not locally_optimal:
             locally_optimal = True
-            for i in range(tsp.N-2):
+            for i in range(tsp.N):
+                A, B = self.heuristic_path[i], self.heuristic_path[i+1]
                 if not locally_optimal: break
                 if self.dlb:
-                    if self.dlb_arr[i]: continue
+                    if self.dlb_arr[A]: continue
                     node_improved = False
+                if self.fixed_radius:
+                    radius = (np.nanmax(tsp.dist_mat[A]) + np.nanmax(tsp.dist_mat[A]))/2
                 for j in range(i + 2, tsp.N - 1 if i == 0 else tsp.N):
+                    C, D = self.heuristic_path[j], self.heuristic_path[j+1]
+                    if self.fixed_radius:
+                        if tsp.dist_mat[A, C] > radius: 
+                            if tsp.dist_mat[B, D] > radius: continue
                     gain = self.gain(i, j, tsp.dist_mat)
                     if gain > 0:
                         self.swap(i+1, j)
-                        self.heuristic_cost -= gain
                         locally_optimal = False
-                        if self.dlb: 
-                            self.setDLB([i,i+1,j,j+1],False)
+                        if self.dlb:
+                            self.setDLB([A, B, C, D], False)
                             node_improved = True
                         break
-                if self.dlb and not node_improved: self.setDLB([i],True)
+                if self.dlb and not node_improved: self.setDLB([A],True)
         end_time = time.time()
         self.heuristic_time = end_time - start_time
+        self.cost(tsp.dist_mat)
                  
     def gain(self, i, j, dist_mat):
         '''
@@ -174,11 +184,6 @@ class TwoOpt(Solver):
                              dist_mat[A,C], dist_mat[B,D]
         d1 = dAB + dCD
         d2 = dAC + dBD
-        if self.fixed_radius:
-            radius = max(dAB,dCD)
-            if dAC > radius:
-                if dBD > radius:
-                    return -1
         return d1 - d2
 
     def swap(self, i, j):
@@ -218,7 +223,7 @@ class NN2Opt(TwoOpt):
         solver = NN()
         solver.solve(tsp)
         self.initial_path = solver.heuristic_path
-        self.initial_cost = solver.heuristic_cost
+        # self.initial_cost = solver.heuristic_cost
         super().solve(tsp)
 
 
@@ -239,7 +244,7 @@ class RepNN2Opt(TwoOpt):
         solver = RepNN()
         solver.solve(tsp)
         self.initial_path = solver.heuristic_path
-        self.initial_cost = solver.heuristic_cost
+        # self.initial_cost = solver.heuristic_cost
         super().solve(tsp)
 
 
@@ -263,7 +268,7 @@ class NN2OptDLB(TwoOpt):
         solver = NN()
         solver.solve(tsp)
         self.initial_path = solver.heuristic_path
-        self.initial_cost = solver.heuristic_cost
+        # self.initial_cost = solver.heuristic_cost
         super().solve(tsp)
 
 
@@ -287,7 +292,7 @@ class RepNN2OptDLB(TwoOpt):
         solver = RepNN()
         solver.solve(tsp)
         self.initial_path = solver.heuristic_path
-        self.initial_cost = solver.heuristic_cost
+        # self.initial_cost = solver.heuristic_cost
         super().solve(tsp)
 
 
@@ -311,7 +316,7 @@ class NN2OptFR(TwoOpt):
         solver = NN()
         solver.solve(tsp)
         self.initial_path = solver.heuristic_path
-        self.initial_cost = solver.heuristic_cost
+        # self.initial_cost = solver.heuristic_cost
         super().solve(tsp)
 
 
@@ -335,7 +340,7 @@ class RepNN2OptFR(TwoOpt):
         solver = RepNN()
         solver.solve(tsp)
         self.initial_path = solver.heuristic_path
-        self.initial_cost = solver.heuristic_cost
+        # self.initial_cost = solver.heuristic_cost
         super().solve(tsp)
 
 
@@ -367,7 +372,6 @@ class ThreeOpt(Solver):
             - tsp : tsp instance to solve
         '''
         self.heuristic_path = self.initial_path[:]
-        self.heuristic_cost = self.initial_cost
         start_time = time.time()
         locally_optimal = False
         if self.dlb: self.setAllDLB(tsp.N+1, False)
@@ -384,7 +388,6 @@ class ThreeOpt(Solver):
                         case, gain = self.gain(i, j, k, tsp.dist_mat)
                         if gain > 0:
                             self.move(i, j, k, case)
-                            self.heuristic_cost -= gain
                             locally_optimal = False
                             if self.dlb: 
                                 self.setDLB([i,i+1,j,j+1,k,k+1],False)
@@ -394,6 +397,7 @@ class ThreeOpt(Solver):
                 if self.dlb and not node_improved: self.setDLB([i],True)
         end_time = time.time()
         self.heuristic_time = end_time - start_time
+        self.cost(tsp.dist_mat)
 
     def gain(self, i, j, k, dist_mat):
         '''
@@ -499,7 +503,7 @@ class NN3Opt(ThreeOpt):
         solver = NN()
         solver.solve(tsp)
         self.initial_path = solver.heuristic_path
-        self.initial_cost = solver.heuristic_cost
+        # self.initial_cost = solver.heuristic_cost
         super().solve(tsp)
 
 
@@ -520,7 +524,7 @@ class RepNN3Opt(ThreeOpt):
         solver = RepNN()
         solver.solve(tsp)
         self.initial_path = solver.heuristic_path
-        self.initial_cost = solver.heuristic_cost
+        # self.initial_cost = solver.heuristic_cost
         super().solve(tsp)
 
 
@@ -544,7 +548,7 @@ class NN3OptDLB(ThreeOpt):
         solver = NN()
         solver.solve(tsp)
         self.initial_path = solver.heuristic_path
-        self.initial_cost = solver.heuristic_cost
+        # self.initial_cost = solver.heuristic_cost
         super().solve(tsp)
 
 
@@ -568,5 +572,5 @@ class RepNN3OptDLB(ThreeOpt):
         solver = RepNN()
         solver.solve(tsp)
         self.initial_path = solver.heuristic_path
-        self.initial_cost = solver.heuristic_cost
+        # self.initial_cost = solver.heuristic_cost
         super().solve(tsp)

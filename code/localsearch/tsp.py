@@ -82,7 +82,7 @@ class TSP():
                     (default: euclidean)
         '''
         self.dist_mat = squareform(pdist(nodes, dist))
-        np.fill_diagonal(self.dist_mat, np.inf)
+        np.fill_diagonal(self.dist_mat, np.nan)
 
     def solve(self, solver):
         '''
