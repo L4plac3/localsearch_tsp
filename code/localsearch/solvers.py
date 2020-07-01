@@ -378,23 +378,25 @@ class ThreeOpt(Solver):
         while not locally_optimal:
             locally_optimal = True
             for i in range(tsp.N - 4):
+                A, B = self.heuristic_path[i], self.heuristic_path[i+1]
                 if not locally_optimal: break
                 if self.dlb:
-                    if self.dlb_arr[i]: continue
+                    if self.dlb_arr[A]: continue
                     node_improved = False
                 for j in range(i + 2, tsp.N - 2):
+                    C, D = self.heuristic_path[j], self.heuristic_path[j+1]
                     if not locally_optimal: break
                     for k in range(j + 2, tsp.N - 1 if i == 0 else tsp.N):
+                        E, F = self.heuristic_path[k], self.heuristic_path[k+1]
                         case, gain = self.gain(i, j, k, tsp.dist_mat)
                         if gain > 0:
                             self.move(i, j, k, case)
                             locally_optimal = False
                             if self.dlb: 
-                                self.setDLB([i,i+1,j,j+1,k,k+1],False)
+                                self.setDLB([A,B,C,D,E,F],False)
                                 node_improved = True
                             break
-                    # if self.dlb and not node_improved: self.setDLB([j],True)
-                if self.dlb and not node_improved: self.setDLB([i],True)
+                if self.dlb and not node_improved: self.setDLB([A],True)
         end_time = time.time()
         self.heuristic_time = end_time - start_time
         self.cost(tsp.dist_mat)
